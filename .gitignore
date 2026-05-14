@@ -114,7 +114,6 @@ temp/
 # OPTIONAL LARGE DATASETS
 # =========================
 datasets/
-data/
 
 # Keep example datasets
 !datasets/README.md
