@@ -1,6 +1,7 @@
 import { Resolver, Query, Args, Int, Float } from '@nestjs/graphql';
 import { SensorService } from './sensor.service';
-import { SensorDto, StatsDto } from './sensor.dto';
+import { SensorDto, StatsDto, CreateSensorInput } from './sensor.dto';
+import { Mutation } from '@nestjs/graphql';
 
 @Resolver(() => SensorDto)
 export class SensorResolver {
@@ -172,5 +173,19 @@ export class SensorResolver {
   @Query(() => StatsDto)
   getSmokeStats() {
     return this.service.getSmokeStats();
+  }
+
+  @Mutation(() => SensorDto)
+  addSensorData(
+    @Args('input') input: CreateSensorInput,
+  ) {
+    return this.service.addSensorData(input);
+  }
+
+  @Mutation(() => Boolean)
+  async deleteSensorData(
+    @Args('id', { type: () => Int }) id: number,
+  ) {
+    return this.service.deleteSensorData(id);
   }
 }

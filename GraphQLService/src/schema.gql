@@ -42,3 +42,18 @@ type Query {
   getHumidityStats: StatsDto!
   getSmokeStats: StatsDto!
 }
+
+type Mutation {
+  addSensorData(input: CreateSensorInput!): SensorDto!
+  deleteSensorData(id: Int!): Boolean!
+}
+
+input CreateSensorInput {
+  deviceId: String!
+  temp: Float!
+  humidity: Float!
+  co: Float!
+  smoke: Float!
+  light: Boolean!
+  timestamp: Float!
+}

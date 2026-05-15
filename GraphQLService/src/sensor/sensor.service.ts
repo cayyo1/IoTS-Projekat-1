@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SensorEntity } from './sensor.entity';
+import { CreateSensorInput } from './sensor.dto';
 
 
 @Injectable()
@@ -192,5 +193,33 @@ export class SensorService {
         .addSelect('MAX(s.smoke)', 'max')
         .addSelect('AVG(s.smoke)', 'average')
         .getRawOne();
+    }
+
+    async addSensorData(input: CreateSensorInput) {
+    const sensor = this.repo.create({
+        deviceId: input.deviceId,
+        temp: input.temp,
+        humidity: input.humidity,
+        co: input.co,
+        smoke: input.smoke,
+        light: input.light,
+        timestamp: input.timestamp,
+    });
+
+        return await this.repo.save(sensor);
+    }
+
+    async deleteSensorData(id: number) {
+    const entity = await this.repo.findOne({
+        where: { id },
+    });
+
+    if (!entity) {
+        return false;
+    }
+
+    await this.repo.remove(entity);
+
+    return true;
     }
 }
