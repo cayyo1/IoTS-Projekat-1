@@ -42,9 +42,6 @@ export class SensorService {
     });
     }
 
-    // =========================
-    // FILTERS
-    // =========================
 
     getTemperatureAbove(value: number, page: number, pageSize: number) {
     return this.repo.find({
@@ -84,9 +81,6 @@ export class SensorService {
     }).then(data => data.filter(x => x.smoke > value));
     }
 
-    // =========================
-    // DEVICE ONLY FIELDS
-    // =========================
     getLightOnly(deviceId: string, page: number, pageSize: number) {
     return this.repo.find({
         where: { deviceId },
@@ -127,9 +121,6 @@ export class SensorService {
     });
     }
 
-    // =========================
-    // MONITORING
-    // =========================
     getMonitoring(deviceId: string, page: number, pageSize: number) {
     return this.repo.find({
         where: { deviceId },
@@ -145,9 +136,6 @@ export class SensorService {
     });
     }
 
-  // =========================
-  // COUNTS
-  // =========================
 
     getCount() {
     return this.repo.count();
