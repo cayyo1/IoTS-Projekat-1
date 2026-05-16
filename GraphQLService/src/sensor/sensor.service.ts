@@ -19,10 +19,10 @@ export class SensorService {
         };
     }
 
-    getLatest(page: number, pageSize: number) {
-    return this.repo.find({
+    getLatest(deviceId: string) {
+    return this.repo.findOne({
+        where: { deviceId },
         order: { timestamp: 'DESC' },
-        ...this.getPagination(page, pageSize),
     });
     }
 
@@ -147,40 +147,27 @@ export class SensorService {
     });
     }
 
-    getTemperatureStats() {
-    return this.repo
-        .createQueryBuilder('s')
-        .select('MIN(s.temp)', 'min')
-        .addSelect('MAX(s.temp)', 'max')
-        .addSelect('AVG(s.temp)', 'average')
-        .getRawOne();
-    }
+    getStats() {
+        return this.repo
+            .createQueryBuilder('s')
+            .select('MIN(s.temp)', 'minTemperature')
+            .addSelect('MAX(s.temp)', 'maxTemperature')
+            .addSelect('AVG(s.temp)', 'averageTemperature')
 
-    getCoStats() {
-    return this.repo
-        .createQueryBuilder('s')
-        .select('MIN(s.co)', 'min')
-        .addSelect('MAX(s.co)', 'max')
-        .addSelect('AVG(s.co)', 'average')
-        .getRawOne();
-    }
+            .addSelect('MIN(s.co)', 'minCo')
+            .addSelect('MAX(s.co)', 'maxCo')
+            .addSelect('AVG(s.co)', 'averageCo')
 
-    getHumidityStats() {
-    return this.repo
-        .createQueryBuilder('s')
-        .select('MIN(s.humidity)', 'min')
-        .addSelect('MAX(s.humidity)', 'max')
-        .addSelect('AVG(s.humidity)', 'average')
-        .getRawOne();
-    }
+            .addSelect('MIN(s.humidity)', 'minHumidity')
+            .addSelect('MAX(s.humidity)', 'maxHumidity')
+            .addSelect('AVG(s.humidity)', 'averageHumidity')
 
-    getSmokeStats() {
-    return this.repo
-        .createQueryBuilder('s')
-        .select('MIN(s.smoke)', 'min')
-        .addSelect('MAX(s.smoke)', 'max')
-        .addSelect('AVG(s.smoke)', 'average')
-        .getRawOne();
+            .addSelect('MIN(s.smoke)', 'minSmoke')
+            .addSelect('MAX(s.smoke)', 'maxSmoke')
+            .addSelect('AVG(s.smoke)', 'averageSmoke')
+
+            .addSelect('COUNT(*)', 'totalCount')
+            .getRawOne();
     }
 
     async addSensorData(input: CreateSensorInput) {

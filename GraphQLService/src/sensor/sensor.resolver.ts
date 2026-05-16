@@ -7,12 +7,9 @@ import { Mutation } from '@nestjs/graphql';
 export class SensorResolver {
   constructor(private readonly service: SensorService) {}
 
-  @Query(() => [SensorDto])
-  getLatest(
-    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
-    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
-  ) {
-    return this.service.getLatest(page, pageSize);
+  @Query(() => SensorDto)
+  getLatest(@Args('deviceId') deviceId: string) {
+    return this.service.getLatest(deviceId);
   }
 
   @Query(() => [SensorDto])
@@ -156,23 +153,8 @@ export class SensorResolver {
   }
 
   @Query(() => StatsDto)
-  getTemperatureStats() {
-    return this.service.getTemperatureStats();
-  }
-
-  @Query(() => StatsDto)
-  getCoStats() {
-    return this.service.getCoStats();
-  }
-
-  @Query(() => StatsDto)
-  getHumidityStats() {
-    return this.service.getHumidityStats();
-  }
-
-  @Query(() => StatsDto)
-  getSmokeStats() {
-    return this.service.getSmokeStats();
+  getStats() {
+    return this.service.getStats();
   }
 
   @Mutation(() => SensorDto)

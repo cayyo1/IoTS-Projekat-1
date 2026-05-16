@@ -16,17 +16,25 @@ namespace RestService.Controllers
             _db = db;
         }
 
-        [HttpGet("latest")]
-        public IActionResult GetLatest(int page = 1, int pageSize = 100)
+        [HttpGet("select/{deviceId}")]
+        public IActionResult GetLatest(string deviceId)
         {
             var data = _db.SensorData
                 .AsNoTracking()
+                .Where(x => x.DeviceId == deviceId)
                 .OrderByDescending(x => x.Timestamp)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+                .FirstOrDefault();
 
-            return Ok(data);
+            if (data == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new
+            {
+                temp = data.Temp,
+                co = data.Co
+            });
         }
 
         [HttpGet("device/{deviceId}")]
@@ -177,64 +185,31 @@ namespace RestService.Controllers
             return Ok(data);
         }
 
-        [HttpGet("temp-stats")]
+        [HttpGet("stats")]
         public IActionResult GetTemperatureStats()
         {
             var result = new
             {
                 MinTemperature = _db.SensorData.Min(x => x.Temp),
                 MaxTemperature = _db.SensorData.Max(x => x.Temp),
-                AverageTemperature = _db.SensorData.Average(x => x.Temp)
-            };
+                AverageTemperature = _db.SensorData.Average(x => x.Temp),
 
-            return Ok(result);
-        }
-
-        [HttpGet("co-stats")]
-        public IActionResult GetCoStats()
-        {
-            var result = new
-            {
                 MinCo = _db.SensorData.Min(x => x.Co),
                 MaxCo = _db.SensorData.Max(x => x.Co),
-                AverageCo = _db.SensorData.Average(x => x.Co)
-            };
+                AverageCo = _db.SensorData.Average(x => x.Co),
 
-            return Ok(result);
-        }
-
-        [HttpGet("humidity-stats")]
-        public IActionResult GetHumidityStats()
-        {
-            var result = new
-            {
                 MinHumidity = _db.SensorData.Min(x => x.Humidity),
                 MaxHumidity = _db.SensorData.Max(x => x.Humidity),
-                AverageHumidity = _db.SensorData.Average(x => x.Humidity)
-            };
+                AverageHumidity = _db.SensorData.Average(x => x.Humidity),
 
-            return Ok(result);
-        }
-
-        [HttpGet("smoke-stats")]
-        public IActionResult GetSmokeStats()
-        {
-            var result = new
-            {
                 MinSmoke = _db.SensorData.Min(x => x.Smoke),
                 MaxSmoke = _db.SensorData.Max(x => x.Smoke),
-                AverageSmoke = _db.SensorData.Average(x => x.Smoke)
+                AverageSmoke = _db.SensorData.Average(x => x.Smoke),
+
+                TotalCount = _db.SensorData.Count()
             };
 
             return Ok(result);
-        }
-
-        [HttpGet("count")]
-        public IActionResult GetCount()
-        {
-            var count = _db.SensorData.Count();
-
-            return Ok(count);
         }
 
         [HttpGet("device/{deviceId}/count")]

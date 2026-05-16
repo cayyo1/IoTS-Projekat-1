@@ -1,10 +1,12 @@
 ﻿syntax = "proto3";
 
+package sensor;
+
 option csharp_namespace = "gRPCService";
 
 service Sensor {
 
-	rpc GetLatest (PaginationRequest) returns (SensorResponse);
+	rpc GetLatest (DeviceRequest) returns (SelectResponse);
 	rpc GetByDevice (DevicePaginationRequest) returns (SensorResponse);
 	rpc GetRange (RangeRequest) returns (SensorResponse);
 
@@ -26,13 +28,9 @@ service Sensor {
 
 	rpc GetMonitoring (DevicePaginationRequest) returns (SensorResponse);
 
-	rpc GetCount (Empty) returns (CountResponse);
 	rpc GetDeviceCount (DeviceRequest) returns (CountResponse);
 
-	rpc GetTemperatureStats (Empty) returns (StatsResponse);
-	rpc GetHumidityStats (Empty) returns (StatsResponse);
-	rpc GetCoStats (Empty) returns (StatsResponse);
-	rpc GetSmokeStats (Empty) returns (StatsResponse);
+	rpc GetStats (Empty) returns (StatsResponse);
 
 	rpc AddSensorData (CreateSensorRequest) returns (SensorData);
 	rpc DeleteSensorData (DeleteRequest) returns (DeleteResponse);
@@ -79,9 +77,23 @@ message CountResponse {
 }
 
 message StatsResponse {
-	double min = 1;
-	double max = 2;
-	double average = 3;
+  double minTemperature = 1;
+  double maxTemperature = 2;
+  double averageTemperature = 3;
+
+  double minCo = 4;
+  double maxCo = 5;
+  double averageCo = 6;
+
+  double minHumidity = 7;
+  double maxHumidity = 8;
+  double averageHumidity = 9;
+
+  double minSmoke = 10;
+  double maxSmoke = 11;
+  double averageSmoke = 12;
+
+  int32 totalCount = 13;
 }
 
 message SensorResponse {
@@ -105,6 +117,11 @@ message DeleteRequest {
 message DeleteResponse {
 	bool success = 1;
 	string message = 2;
+}
+
+message SelectResponse {
+  double temp = 1;
+  double co = 2;
 }
 
 message SensorData {

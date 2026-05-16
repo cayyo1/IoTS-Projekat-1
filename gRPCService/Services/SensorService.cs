@@ -13,16 +13,19 @@ namespace gRPCService.Services
             _db = db;
         }
 
-        public override async Task<SensorResponse> GetLatest(PaginationRequest request, ServerCallContext context)
+        public override async Task<SelectResponse> GetLatest(DeviceRequest request, ServerCallContext context)
         {
             var data = await _db.SensorData
                 .AsNoTracking()
+                .Where(x => x.DeviceId == request.DeviceId)
                 .OrderByDescending(x => x.Timestamp)
-                .Skip((request.Page - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .ToListAsync();
+                .FirstOrDefaultAsync();
 
-            return Map(data);
+            return new SelectResponse
+            {
+                Temp = data?.Temp ?? 0,
+                Co = data?.Co ?? 0
+            };
         }
 
         public override async Task<SensorResponse> GetByDevice(DevicePaginationRequest request, ServerCallContext context)
@@ -241,16 +244,6 @@ namespace gRPCService.Services
             return Map(data);
         }
 
-        public override async Task<CountResponse> GetCount(Empty request, ServerCallContext context)
-        {
-            var count = await _db.SensorData.CountAsync();
-
-            return new CountResponse
-            {
-                Count = count
-            };
-        }
-
         public override async Task<CountResponse> GetDeviceCount(DeviceRequest request, ServerCallContext context)
         {
             var count = await _db.SensorData
@@ -262,43 +255,27 @@ namespace gRPCService.Services
             };
         }
 
-        public override async Task<StatsResponse> GetTemperatureStats(Empty request, ServerCallContext context)
+        public override async Task<StatsResponse> GetStats(Empty request, ServerCallContext context)
         {
             return new StatsResponse
             {
-                Min = await _db.SensorData.MinAsync(x => x.Temp),
-                Max = await _db.SensorData.MaxAsync(x => x.Temp),
-                Average = await _db.SensorData.AverageAsync(x => x.Temp)
-            };
-        }
+                MinTemperature = await _db.SensorData.MinAsync(x => x.Temp),
+                MaxTemperature = await _db.SensorData.MaxAsync(x => x.Temp),
+                AverageTemperature = await _db.SensorData.AverageAsync(x => x.Temp),
 
-        public override async Task<StatsResponse> GetHumidityStats(Empty request, ServerCallContext context)
-        {
-            return new StatsResponse
-            {
-                Min = await _db.SensorData.MinAsync(x => x.Humidity),
-                Max = await _db.SensorData.MaxAsync(x => x.Humidity),
-                Average = await _db.SensorData.AverageAsync(x => x.Humidity)
-            };
-        }
+                MinCo = await _db.SensorData.MinAsync(x => x.Co),
+                MaxCo = await _db.SensorData.MaxAsync(x => x.Co),
+                AverageCo = await _db.SensorData.AverageAsync(x => x.Co),
 
-        public override async Task<StatsResponse> GetCoStats(Empty request, ServerCallContext context)
-        {
-            return new StatsResponse
-            {
-                Min = await _db.SensorData.MinAsync(x => x.Co),
-                Max = await _db.SensorData.MaxAsync(x => x.Co),
-                Average = await _db.SensorData.AverageAsync(x => x.Co)
-            };
-        }
+                MinHumidity = await _db.SensorData.MinAsync(x => x.Humidity),
+                MaxHumidity = await _db.SensorData.MaxAsync(x => x.Humidity),
+                AverageHumidity = await _db.SensorData.AverageAsync(x => x.Humidity),
 
-        public override async Task<StatsResponse> GetSmokeStats(Empty request, ServerCallContext context)
-        {
-            return new StatsResponse
-            {
-                Min = await _db.SensorData.MinAsync(x => x.Smoke),
-                Max = await _db.SensorData.MaxAsync(x => x.Smoke),
-                Average = await _db.SensorData.AverageAsync(x => x.Smoke)
+                MinSmoke = await _db.SensorData.MinAsync(x => x.Smoke),
+                MaxSmoke = await _db.SensorData.MaxAsync(x => x.Smoke),
+                AverageSmoke = await _db.SensorData.AverageAsync(x => x.Smoke),
+
+                TotalCount = await _db.SensorData.CountAsync()
             };
         }
 

@@ -30,14 +30,45 @@ export class SensorDto {
 
 @ObjectType()
 export class StatsDto {
-    @Field(() => Float)
-    min: number;
 
     @Field(() => Float)
-    max: number;
+    minTemperature: number;
 
     @Field(() => Float)
-    average: number;
+    maxTemperature: number;
+
+    @Field(() => Float)
+    averageTemperature: number;
+
+    @Field(() => Float)
+    minCo: number;
+
+    @Field(() => Float)
+    maxCo: number;
+
+    @Field(() => Float)
+    averageCo: number;
+
+    @Field(() => Float)
+    minHumidity: number;
+
+    @Field(() => Float)
+    maxHumidity: number;
+
+    @Field(() => Float)
+    averageHumidity: number;
+
+    @Field(() => Float)
+    minSmoke: number;
+
+    @Field(() => Float)
+    maxSmoke: number;
+
+    @Field(() => Float)
+    averageSmoke: number;
+
+    @Field(() => Float)
+    totalCount: number;
 }
 
 @InputType()
