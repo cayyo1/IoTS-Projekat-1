@@ -66,15 +66,6 @@ postgres-data/
 # Docker override files
 docker-compose.override.yml
 
-# =========================
-# DATABASE
-# =========================
-*.db
-*.sqlite
-*.sqlite3
-
-# PostgreSQL dump files
-*.sql
 *.dump
 
 # =========================
@@ -109,11 +100,3 @@ Desktop.ini
 tmp/
 temp/
 *.tmp
-
-# =========================
-# OPTIONAL LARGE DATASETS
-# =========================
-datasets/
-
-# Keep example datasets
-!datasets/README.md
