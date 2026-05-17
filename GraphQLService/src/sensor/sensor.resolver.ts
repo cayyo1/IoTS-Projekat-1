@@ -1,0 +1,173 @@
+import { Resolver, Query, Args, Int, Float } from '@nestjs/graphql';
+import { SensorService } from './sensor.service';
+import { SensorDto, StatsDto, CreateSensorInput } from './sensor.dto';
+import { Mutation } from '@nestjs/graphql';
+
+@Resolver(() => SensorDto)
+export class SensorResolver {
+  constructor(private readonly service: SensorService) {}
+
+  @Query(() => SensorDto)
+  getLatest(@Args('deviceId') deviceId: string) {
+    return this.service.getLatest(deviceId);
+  }
+
+  @Query(() => [SensorDto])
+  getByDevice(
+    @Args('deviceId') deviceId: string,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) 
+  {
+    return this.service.getByDevice(deviceId, page, pageSize);
+  }
+
+  @Query(() => [SensorDto])
+  getRange(
+    @Args('from', { type: () => Float }) from: number,
+    @Args('to', { type: () => Float }) to: number,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getRange(from, to, page, pageSize);
+  }
+
+
+  @Query(() => [SensorDto])
+  getTemperatureAbove(
+    @Args('value', { type: () => Float }) value: number,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getTemperatureAbove(value, page, pageSize);
+  }
+
+  @Query(() => [SensorDto])
+  getTemperatureBelow(
+    @Args('value', { type: () => Float }) value: number,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getTemperatureBelow(value, page, pageSize);
+  }
+
+  @Query(() => [SensorDto])
+  getHumidityAbove(
+    @Args('value', { type: () => Float }) value: number,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getHumidityAbove(value, page, pageSize);
+  }
+
+  @Query(() => [SensorDto])
+  getHumidityBelow(
+    @Args('value', { type: () => Float }) value: number,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getHumidityBelow(value, page, pageSize);
+  }
+
+  @Query(() => [SensorDto])
+  getCoAbove(
+    @Args('value', { type: () => Float }) value: number,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getCoAbove(value, page, pageSize);
+  }
+
+  @Query(() => [SensorDto])
+  getSmokeAbove(
+    @Args('value', { type: () => Float }) value: number,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getSmokeAbove(value, page, pageSize);
+  }
+
+  @Query(() => [SensorDto])
+  getLightOnly(
+    @Args('deviceId') deviceId: string,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getLightOnly(deviceId, page, pageSize);
+  }
+
+  @Query(() => [SensorDto])
+  getTempOnly(
+    @Args('deviceId') deviceId: string,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getTempOnly(deviceId, page, pageSize);
+  }
+
+  @Query(() => [SensorDto])
+  getCoOnly(
+    @Args('deviceId') deviceId: string,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getCoOnly(deviceId, page, pageSize);
+  }
+
+  @Query(() => [SensorDto])
+  getSmokeOnly(
+    @Args('deviceId') deviceId: string,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getSmokeOnly(deviceId, page, pageSize);
+  }
+
+  @Query(() => [SensorDto])
+  getHumidityOnly(
+    @Args('deviceId') deviceId: string,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getHumidityOnly(deviceId, page, pageSize);
+  }
+
+
+  @Query(() => [SensorDto])
+  getMonitoring(
+    @Args('deviceId') deviceId: string,
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('pageSize', { type: () => Int, defaultValue: 100 }) pageSize: number,
+  ) {
+    return this.service.getMonitoring(deviceId, page, pageSize);
+  }
+
+  @Query(() => Int)
+  getCount() {
+    return this.service.getCount();
+  }
+
+  @Query(() => Int)
+  getDeviceCount(@Args('deviceId') deviceId: string) {
+    return this.service.getDeviceCount(deviceId);
+  }
+
+  @Query(() => StatsDto)
+  getStats() {
+    return this.service.getStats();
+  }
+
+  @Mutation(() => SensorDto)
+  addSensorData(
+    @Args('input') input: CreateSensorInput,
+  ) {
+    return this.service.addSensorData(input);
+  }
+
+  @Mutation(() => Boolean)
+  async deleteSensorData(
+    @Args('id', { type: () => Int }) id: number,
+  ) {
+    return this.service.deleteSensorData(id);
+  }
+}

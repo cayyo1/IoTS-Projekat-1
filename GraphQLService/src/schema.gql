@@ -1,0 +1,59 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type SensorDto {
+  id: Int!
+  deviceId: String!
+  temp: Float!
+  humidity: Float!
+  co: Float!
+  smoke: Float!
+  light: Boolean!
+  timestamp: Float!
+}
+
+type StatsDto {
+  min: Float!
+  max: Float!
+  average: Float!
+}
+
+type Query {
+  getLatest(page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getByDevice(deviceId: String!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getRange(from: Float!, to: Float!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getTemperatureAbove(value: Float!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getTemperatureBelow(value: Float!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getHumidityAbove(value: Float!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getHumidityBelow(value: Float!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getCoAbove(value: Float!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getSmokeAbove(value: Float!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getLightOnly(deviceId: String!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getTempOnly(deviceId: String!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getCoOnly(deviceId: String!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getSmokeOnly(deviceId: String!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getHumidityOnly(deviceId: String!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getMonitoring(deviceId: String!, page: Int! = 1, pageSize: Int! = 100): [SensorDto!]!
+  getCount: Int!
+  getDeviceCount(deviceId: String!): Int!
+  getTemperatureStats: StatsDto!
+  getCoStats: StatsDto!
+  getHumidityStats: StatsDto!
+  getSmokeStats: StatsDto!
+}
+
+type Mutation {
+  addSensorData(input: CreateSensorInput!): SensorDto!
+  deleteSensorData(id: Int!): Boolean!
+}
+
+input CreateSensorInput {
+  deviceId: String!
+  temp: Float!
+  humidity: Float!
+  co: Float!
+  smoke: Float!
+  light: Boolean!
+  timestamp: Float!
+}

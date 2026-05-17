@@ -1,0 +1,136 @@
+﻿syntax = "proto3";
+
+package sensor;
+
+option csharp_namespace = "gRPCService";
+
+service Sensor {
+
+	rpc GetLatest (DeviceRequest) returns (SelectResponse);
+	rpc GetByDevice (DevicePaginationRequest) returns (SensorResponse);
+	rpc GetRange (RangeRequest) returns (SensorResponse);
+
+	rpc GetTemperatureAbove (ValuePaginationRequest) returns (SensorResponse);
+	rpc GetTemperatureBelow (ValuePaginationRequest) returns (SensorResponse);
+
+	rpc GetHumidityAbove (ValuePaginationRequest) returns (SensorResponse);
+	rpc GetHumidityBelow (ValuePaginationRequest) returns (SensorResponse);
+
+	rpc GetCoAbove (ValuePaginationRequest) returns (SensorResponse);
+	rpc GetSmokeAbove (ValuePaginationRequest) returns (SensorResponse);
+	rpc GetByLightStatus (LightRequest) returns (SensorResponse);
+
+	rpc GetLightOnly (DevicePaginationRequest) returns (SensorResponse);
+	rpc GetTempOnly (DevicePaginationRequest) returns (SensorResponse);
+	rpc GetCoOnly (DevicePaginationRequest) returns (SensorResponse);
+	rpc GetSmokeOnly (DevicePaginationRequest) returns (SensorResponse);
+	rpc GetHumidityOnly (DevicePaginationRequest) returns (SensorResponse);
+
+	rpc GetMonitoring (DevicePaginationRequest) returns (SensorResponse);
+
+	rpc GetDeviceCount (DeviceRequest) returns (CountResponse);
+
+	rpc GetStats (Empty) returns (StatsResponse);
+
+	rpc AddSensorData (CreateSensorRequest) returns (SensorData);
+	rpc DeleteSensorData (DeleteRequest) returns (DeleteResponse);
+}
+
+message Empty {}
+
+message PaginationRequest {
+	int32 page = 1;
+	int32 pageSize = 2;
+}
+
+message DeviceRequest {
+	string deviceId = 1;
+}
+
+message DevicePaginationRequest {
+	string deviceId = 1;
+	int32 page = 2;
+	int32 pageSize = 3;
+}
+
+message ValuePaginationRequest {
+	double value = 1;
+	int32 page = 2;
+	int32 pageSize = 3;
+}
+
+message LightRequest {
+	bool status = 1;
+	int32 page = 2;
+	int32 pageSize = 3;
+}
+
+message RangeRequest {
+	double from = 1;
+	double to = 2;
+	int32 page = 3;
+	int32 pageSize = 4;
+}
+
+message CountResponse {
+	int32 count = 1;
+}
+
+message StatsResponse {
+  double minTemperature = 1;
+  double maxTemperature = 2;
+  double averageTemperature = 3;
+
+  double minCo = 4;
+  double maxCo = 5;
+  double averageCo = 6;
+
+  double minHumidity = 7;
+  double maxHumidity = 8;
+  double averageHumidity = 9;
+
+  double minSmoke = 10;
+  double maxSmoke = 11;
+  double averageSmoke = 12;
+
+  int32 totalCount = 13;
+}
+
+message SensorResponse {
+	repeated SensorData data = 1;
+}
+
+message CreateSensorRequest {
+	string deviceId = 1;
+	double temp = 2;
+	double humidity = 3;
+	double co = 4;
+	double smoke = 5;
+	bool light = 6;
+	double timestamp = 7;
+}
+
+message DeleteRequest {
+	int32 id = 1;
+}
+
+message DeleteResponse {
+	bool success = 1;
+	string message = 2;
+}
+
+message SelectResponse {
+  double temp = 1;
+  double co = 2;
+}
+
+message SensorData {
+	int32 id = 1;
+	string deviceId = 2;
+	double temp = 3;
+	double humidity = 4;
+	double co = 5;
+	double smoke = 6;
+	bool light = 7;
+	double timestamp = 8;
+}

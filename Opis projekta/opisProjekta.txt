@@ -1,0 +1,122 @@
+Internet stvari i servisa 
+Projekat  1
+
+=============================================
+
+
+Ovaj projekat implementira sistem za obradu IoT senzorskih podataka koristeći tri razlicita sinhrona komunikaciona modela:
+
+- REST (JSON preko HTTP)
+- GraphQL (query-based JSON API)
+- gRPC (Protobuf binarna komunikacija)
+
+
+Sistem se sastoji od sledećih mikroservisa:
+
+- rest-service 
+- graphql-service 
+- grpc-service 
+- postgres database
+
+Svi servisi su kontejnerizovani i komuniciraju sa zajednickom bazom podataka.
+
+
+=============================================
+
+*** POKRETANJE PROJEKTA ***
+
+=============================================
+
+docker compose up --build
+
+(Nakon pokretanja servisi su dostupni na sledecim adresama)
+
+REST API:
+http://localhost:5000/swagger
+
+GraphQL API:
+http://localhost:3000/graphql
+
+gRPC servis:
+localhost:6000
+
+PostgreSQL:
+localhost:5432
+
+(Baza se kreira preko Dockera i podaci se inicijalno ubacuju preko seed.sql skripte)
+
+===================================================
+
+
+Scenario A – High Frequency Ingestion
+- kontinuirano slanje IoT podataka
+- analiza write performansi
+
+Scenario B – Selective Monitoring
+- selektovana polja senzora
+- simulacija slabih mreza
+
+Scenario C – Heavy Querying
+- slozeni upiti nad velikim dataset-om
+- min/max/avg statistike
+
+
+
+=============================================
+
+*** PERFORMANSE (k6) ***
+
+=============================================
+Simulirani su razliciti nivoi opterecenja i testiranje je izvrseno za svaki scenario (kroz sva tri mikroservisa).
+Broj virtuelnih korisnika i parametara koji se prate: 
+
+- 10 virtualnih korisnika
+- 100 virtualnih korisnika
+- 500 virtualnih korisnika
+
+- http_req_duration (prosecna latencija)
+- p95 latencija
+- RPS (requests per second)
+
+
+Sve skripte za testiranje se nalaze u folderu "k6".
+
+PRIMER POKRETANJA SKRIPTE:
+
+k6 run -e VUS=10 rest-a.js
+k6 run -e VUS=100 rest-a.js
+k6 run -e VUS=500 rest-a.js
+
+------------------------------------------
+
+Rezultati testiranja k6 skripti, nalaze se u folderu "Tabele" u vidu tabela.
+("   4.a).png   ")
+
+Velicine odgovora:
+
+- REST:    393 bytes  JSON
+- graphQL: 415 bytes  JSON
+- gRPC:    112 bytes  Protobuf binarni format
+
+
+========================================================
+
+*** CPU I RAM *** 
+
+=======================================================
+
+Za ovo testiranje koriscen je docker stats alat tokom k6 testova i praceni su CPU i RAM usage po kontejnerima koji se odnosi za konkretni mikroservis.
+
+Rezultati testiranja se nalaze u folderu "Tabele" u vidu tabele.
+("   4.c).png    ")
+
+
+======================================================
+
+*** ZAKLJUCAK ***
+
+==================================================
+
+- gRPC se pokazao kao najefikasnije resenje za IoT sisteme zbog minimalnog mreznog overhead-a
+- GraphQL pruža najbolju fleksibilnost u selektivnim upitima
+- REST ostaje najjednostavniji ali i najmanje optimalan pod velikim opterecenjem.
